@@ -1,6 +1,7 @@
 #ifndef LISTA_H_INCLUDED
 #define LISTA_H_INCLUDED
 #include <iostream>
+#include <string>
 #include "nodoLista.h"
 using namespace std;
 
