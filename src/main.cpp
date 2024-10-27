@@ -2,22 +2,13 @@
 //#include "./estructuras/lista.cpp"
 //#include "./estructuras/archivo.cpp"
 #include "menu.cpp"
+#include "centro.h"
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <vector>
 using namespace std;
 
-struct Centro
-    {
-        string codigo;
-        string nombre;
-        string pais;
-        float superficie;
-        int cant_laboratorios;
-        int cant_p_nacionales;
-        int cant_p_internacionales;
-    };
 
 struct Proyecto
     {
