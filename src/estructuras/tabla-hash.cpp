@@ -2,20 +2,25 @@
 
 TablaHash::TablaHash()
 {
-    Centro tabla[10];
+    Centro* tabla[10] = {nullptr};
 }
 
-void TablaHash::agregar(Centro c) {
-    int posicion = hash(c.codigo);
+void TablaHash::agregar(Centro* c) {
+    int posicion = hash(c->codigo);
     tabla[posicion] = c;
 };
 
-void TablaHash::eliminar(Centro c) {
-    int posicion = hash(c.codigo);
-    Centro centroVacio;
-};
+void TablaHash::eliminar(Centro* c) {
+    int posicion = hash(c->codigo);
+    delete tabla[posicion];
+    tabla[posicion] = nullptr;
+}
 
-Centro TablaHash::buscar(string c) {
+Centro* TablaHash::elem(int i) {
+    return tabla[i];
+}
+
+Centro* TablaHash::buscar(string c) {
     int posicion = hash(c);
     return tabla[posicion];
 };
@@ -30,6 +35,6 @@ int TablaHash::hash(string codigo) {
 };
 
 string TablaHash::mostrar(int i) {
-    return tabla[i].codigo;
+    return tabla[i]->codigo;
 }
 

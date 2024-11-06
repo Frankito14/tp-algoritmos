@@ -9,14 +9,15 @@ using namespace std;
 class TablaHash 
 {
     private:
-        Centro tabla[10];
+        Centro* tabla[10];
         //int hash(string c);
 
     public:
         TablaHash();
-        void agregar(Centro c);
-        void eliminar(Centro c);
-        Centro buscar(string codigo);
+        void agregar(Centro* c);
+        void eliminar(Centro* c);
+        Centro* elem(int i);
+        Centro* buscar(string codigo);
         int hash(string c);
         string mostrar(int i);
 };
