@@ -13,7 +13,7 @@ void TablaHash::agregar(Centro* c) {
 void TablaHash::eliminar(Centro* c) {
     int posicion = hash(c->codigo);
     delete tabla[posicion];
-    tabla[posicion] = nullptr;
+    tabla[posicion] = CentroEliminado.instance;
 }
 
 Centro* TablaHash::elem(int i) {
@@ -29,12 +29,22 @@ int TablaHash::hash(string codigo) {
     int posicion = 1;
     for (size_t i = 0; i < codigo.length(); i++)
     {
-        posicion += int(codigo[i]) * (i+1);
+        posicion += int(codigo[i]) * 128 * (i+1);
     };
     return posicion % 10;
 };
 
 string TablaHash::mostrar(int i) {
     return tabla[i]->codigo;
-}
+};
 
+Lista TablaHash::listaElementos() {
+    Lista listaElementos = new Lista();
+    for (size_t i = 0; i < 10; i++)
+    {
+        if(tabla[i] != nullptr && tabla[i] != CentroEliminado.instance) {
+            listaElementos.agregar(tabla[i]);
+        }
+    }
+    return listaElementos;
+}

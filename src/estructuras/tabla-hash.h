@@ -20,6 +20,7 @@ class TablaHash
         Centro* buscar(string codigo);
         int hash(string c);
         string mostrar(int i);
+        Lista listaElementos();
 };
 
 #endif

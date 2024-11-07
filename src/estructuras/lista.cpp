@@ -89,5 +89,14 @@ void Lista::mostrar()
       cout<<"]"<<endl;
 }
 
-
-
+void Lista::ordenar() {
+    NodoLista aux = this.primero;
+    while (aux != nullptr)
+    {
+        if(aux.obtener_dato() > aux.obtener_siguiente()->obtener_dato()) {
+            aux.siguiente->cambiar_siguiente = aux;
+        } else {
+            aux = aux.obtener_siguiente();
+        }
+    }
+}

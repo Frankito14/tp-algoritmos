@@ -20,6 +20,7 @@ public:
     virtual ~Lista();
     int obtener_largo();
     void mostrar();
+    void ordenarLista();
 
 
 private:
