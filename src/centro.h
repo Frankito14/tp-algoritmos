@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef CENTRO_H
+#define CENTRO_H
 using namespace std;
 #include <string>
 
@@ -14,4 +14,4 @@ typedef struct
         int cant_p_internacionales;
     } Centro;
 
-#endif //MENU_H
+#endif //CENTRO_H

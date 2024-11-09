@@ -2,7 +2,10 @@
 #include "centro.h"
 #include <string>
 
-Menu::Menu() {}
+Menu::Menu()
+{
+    cargarProyectos();
+}
 
 void Menu::mostrarMenuPrincipal()
 {
@@ -48,7 +51,7 @@ void Menu::mostrarMenuCentros()
         eliminarCentro();
         break;
     case 4:
-        cout << "verTodosLosCentros()" <<endl;
+        cout << "verTodosLosCentros()" << endl;
         break;
     default:
         break;
@@ -141,4 +144,109 @@ void Menu::mostrarMenuProyectos()
         cout << "Opción incorrecta " << endl;
         break;
     }
+}
+
+void Menu::cargarProyectos()
+{
+    string *codigos = new string[1];
+    int cantidadVertices = 0;
+    string proyectoTexto;
+    ifstream archivo("proyectos.txt");
+    int vuelta = 1;
+    // Obtenemos la cantidad de vertices que tendra el grafo. Tenemos que contar los codigos (Sin contar los repetidos)
+    while (getline(archivo, proyectoTexto))
+    {
+
+        stringstream codigo;
+        codigo << proyectoTexto[0] << proyectoTexto[1] << proyectoTexto[2];
+        string codigoOrigen = codigo.str();
+        codigo.str("");
+        codigo << proyectoTexto[4] << proyectoTexto[5] << proyectoTexto[6];
+        string codigoDestino = codigo.str();
+        // Crea un nuevo arreglo que tendra el tamaño necesario para guardar los nuevos codigos encontrados
+        if (cantidadVertices == 0)
+        {
+            codigos[0] = codigoOrigen;
+            cantidadVertices++;
+        };
+        bool origenCargado = false;
+        bool destinoCargado = false;
+        // Busca si los codigos ya estan cargados
+        for (int i = 0; i < cantidadVertices; i++)
+        {
+            if (codigos[i] == codigoOrigen)
+                origenCargado = true;
+            if (codigos[i] == codigoDestino)
+                destinoCargado = true;
+        }
+
+        //Si algun codigo no esta cargado, redimension el arreglo y los carga
+        if (!origenCargado || !destinoCargado)
+        {
+            // Crea un nuevo arreglo agregando los codigos que se usaran como vertices del grafo
+            string *nuevosCodigos = new string[cantidadVertices + !origenCargado + !destinoCargado];
+            // Copia el arreglo actual al nuevo
+            for (int i = 0; i < cantidadVertices; i++)
+            {
+                nuevosCodigos[i] = codigos[i];
+            }
+            if (!origenCargado && !destinoCargado)
+            {
+                nuevosCodigos[cantidadVertices] = codigoOrigen;
+                nuevosCodigos[cantidadVertices + 1] = codigoDestino;
+                cantidadVertices += 2;
+            }
+            else
+            {
+                if (!origenCargado)
+                {
+                    nuevosCodigos[cantidadVertices] = codigoOrigen;
+                    cantidadVertices++;
+                }
+                if (!destinoCargado)
+                {
+                    nuevosCodigos[cantidadVertices + !origenCargado] = codigoDestino;
+                    cantidadVertices++;
+                }
+            }
+            vuelta++;
+
+            delete[] codigos;
+            codigos = nuevosCodigos;
+        }
+    }
+    archivo.close();
+
+    // Creamos el grafo con la cantidad de nodos y cargamos las aristas
+    grafo = new DigrafoPonderado(cantidadVertices);
+    string proyectoTexto2;
+    ifstream archivo2("proyectos.txt");
+    int verticesAgregados = 0;
+    while (getline(archivo2, proyectoTexto2))
+    {
+        string datos[4];
+        stringstream ss(proyectoTexto2);
+        string temp;
+        int i = 0;
+        while (getline(ss, temp, ' '))
+        {
+            datos[i] = temp;
+            i++;
+        }
+
+        if (grafo->sePuedeAgregarElCodigoVertice(datos[0]))
+        {
+            grafo->asignarCodigoAVertice(verticesAgregados, datos[0]);
+            verticesAgregados++;
+        }
+
+        if (grafo->sePuedeAgregarElCodigoVertice(datos[1]))
+        {
+            grafo->asignarCodigoAVertice(verticesAgregados, datos[1]);
+            verticesAgregados++;
+        }
+
+        //grafo->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
+    }
+    grafo->mostrarListaAdyacencia();
 }
