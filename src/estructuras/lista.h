@@ -5,6 +5,7 @@
 #include "nodoLista.h"
 using namespace std;
 
+template<typename T>
 class Lista
 {
 private:
@@ -14,6 +15,7 @@ private:
 public:
     Lista();
     void agregar(int d, int pos);
+    void agregar_al_final(T d);
     void eliminar(int pos);
     int consultar(int pos);
     bool estaVacia();

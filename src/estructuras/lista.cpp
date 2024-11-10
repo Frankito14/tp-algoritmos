@@ -30,6 +30,22 @@ void Lista::agregar(Dato d, int pos)
     largo++;
 }
 
+void Lista::agregar_al_final(Dato d)
+{
+    NodoLista* nuevo = new NodoLista(d);
+    if (primero == 0)
+    {
+        nuevo->cambiar_siguiente(primero);
+        primero = nuevo;
+    }
+    else
+    {
+        NodoLista* anterior = obtener_nodo(largo - 1);
+        anterior->cambiar_siguiente(nuevo);
+    }
+    largo++;
+}
+
 NodoLista* Lista::obtener_nodo(int pos)
 {
     NodoLista* aux = primero;

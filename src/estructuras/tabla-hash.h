@@ -9,7 +9,8 @@ using namespace std;
 class TablaHash 
 {
     private:
-        Centro* tabla[10];
+        Centro** tabla;
+        int cant_elem;
         //int hash(string c);
 
     public:
@@ -20,6 +21,8 @@ class TablaHash
         Centro* buscar(string codigo);
         int hash(string c);
         string mostrar(int i);
+        Lista<string>* mostrar_todos();
+        void copy_in(Centro* tab[], Centro* new_tab[]);
 };
 
 #endif
