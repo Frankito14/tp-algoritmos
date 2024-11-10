@@ -282,7 +282,7 @@ void Menu::cargarProyectos()
             verticesAgregados++;
         }
 
-        //proyectos->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
+        proyectos->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
     }
     proyectos->mostrarListaAdyacencia();
 }

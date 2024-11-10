@@ -101,13 +101,13 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino,
     }
 
     // Inicializar arreglos auxiliares
-    int infinito = 100000; // Maximo valor de un Int
+    const int INFINITO = 100000;
     int *distancias = new int[cantidadVertices];
     int *predecesores = new int[cantidadVertices];
     bool *visitados = new bool[cantidadVertices];
     for (int i = 0; i < cantidadVertices; i++)
     {
-        distancias[i] = infinito;
+        distancias[i] = INFINITO;
         predecesores[i] = -1;
         visitados[i] = false;
     }
@@ -151,7 +151,7 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino,
         }
     }
 
-    if (distancias[end] == infinito)
+    if (distancias[end] == INFINITO)
     {
         cout << "No hay camino desde " << codigoOrigen << " hasta " << codigoDestino << endl;
     }
@@ -185,9 +185,9 @@ void DigrafoPonderado::mostrarListaAdyacencia()
         if (listaAdyacencia[i] != nullptr)
         {
             for (int j = 0; listaAdyacencia[i][j]!= nullptr; j++)
-            {   /*
+            {   
                 cout << codigosVertices[listaAdyacencia[i][j]->destino] << " (costo: " << listaAdyacencia[i][j]->peso.costo
-                     << ", tiempo: " << listaAdyacencia[i][j]->peso.tiempo << ") ";*/ cout <<listaAdyacencia[i][j]->peso.costo<< endl;
+                     << ", tiempo: " << listaAdyacencia[i][j]->peso.tiempo << ") ";
             }
             
         }
