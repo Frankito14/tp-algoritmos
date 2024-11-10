@@ -78,7 +78,7 @@ void guardarCentros(){
 
 
 int main() {
-    
+    CentroEliminado centro_eliminado = CentroEliminado::getInstance();
     cargarCentros();
     Menu* menu = new Menu();
     while(true)

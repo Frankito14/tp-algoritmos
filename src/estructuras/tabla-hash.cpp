@@ -1,5 +1,6 @@
 #include "tabla-hash.h"
 
+
 TablaHash::TablaHash()
 {
     Centro** tabla = new Centro*[1];
@@ -19,7 +20,7 @@ void TablaHash::agregar(Centro* c) {
 void TablaHash::eliminar(Centro* c) {
     int posicion = hash(c->codigo);
     delete tabla[posicion];
-    tabla[posicion] = nullptr;
+    tabla[posicion] = CentroEliminado::instance;
 }
 
 Centro* TablaHash::elem(int i) {
@@ -35,7 +36,7 @@ int TablaHash::hash(string codigo) {
     int posicion = 1;
     for (size_t i = 0; i < codigo.length(); i++)
     {
-        posicion += int(codigo[i]) * (i+1);
+        posicion += int(codigo[i]) * 128 * (i+1);
     };
     return posicion % 10;
 };
@@ -64,4 +65,15 @@ void TablaHash::copy_in(Centro* tab[], Centro* new_tab[]) {
             new_tab[i] = tab[i];
         }
     }
+};
+
+Lista<Centro*>* TablaHash::listaElementos() {
+    Lista<Centro*>* listaElementos = new Lista<Centro*>();
+    for (size_t i = 0; i < 10; i++)
+    {
+        if(tabla[i] != nullptr && tabla[i] != CentroEliminado::instance) {
+            listaElementos->agregar_al_final(tabla[i]);
+        }
+    }
+    return listaElementos;
 }

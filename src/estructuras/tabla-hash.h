@@ -23,6 +23,7 @@ class TablaHash
         string mostrar(int i);
         Lista<string>* mostrar_todos();
         void copy_in(Centro* tab[], Centro* new_tab[]);
+        Lista<Centro*>* listaElementos();
 };
 
 #endif

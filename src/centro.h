@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 using namespace std;
-#include <string>
+// #include <string>
 
 typedef struct
     {
@@ -13,5 +13,19 @@ typedef struct
         int cant_p_nacionales;
         int cant_p_internacionales;
     } Centro;
+
+struct CentroEliminado : public Centro {
+    static CentroEliminado* instance;
+
+    private:
+        CentroEliminado();
+
+    public:
+        static CentroEliminado getInstance() {
+            if(instance != nullptr){
+                instance = new CentroEliminado();
+            }
+        };
+};
 
 #endif //MENU_H
