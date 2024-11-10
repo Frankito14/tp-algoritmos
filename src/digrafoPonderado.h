@@ -29,7 +29,7 @@ public:
     string obtenerCodigoVertice(int indexVertice);
     int obtenerIndexDeCodigoVertice(const string& codigoBuscado);
     void agregarArista(const string& codigoOrigen, const string& codigoDestino, int costo, float tiempo);
-    void caminoMasCorto(string codigoOrigen, string codigoDestino);
+    void caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo);
     virtual ~DigrafoPonderado();
 };
 

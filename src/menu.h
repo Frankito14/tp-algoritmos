@@ -11,13 +11,14 @@ class Menu
 {
 private:
     //Centro* centros = new Centro[0];
-    DigrafoPonderado* grafo;
+    DigrafoPonderado* proyectos;
     
 public:
     Menu();
     void mostrarMenuPrincipal();
     void mostrarMenuCentros();
     void mostrarMenuProyectos();
+    void cerrarMenu();
 
 private:
     //Funciones de centros

@@ -12,7 +12,8 @@ void Menu::mostrarMenuPrincipal()
     int opcion;
     cout << "Gestion de centros de investigacion" << endl;
     cout << "1 - Ver Centros" << "\n"
-         << "2 - Ver Proyectos" << endl;
+         << "2 - Ver Proyectos" << "\n"
+         << "3 - Cerrar aplicacion" << endl;
     cout << "Ingrese una opcion: ";
     cin >> opcion;
     switch (opcion)
@@ -22,6 +23,9 @@ void Menu::mostrarMenuPrincipal()
         break;
     case 2:
         mostrarMenuProyectos();
+        break;
+    case 3:
+        cerrarMenu();
         break;
     default:
         cout << "Opción incorrecta " << endl;
@@ -36,7 +40,9 @@ void Menu::mostrarMenuCentros()
     cout << "1 - Consultar centro" << "\n"
          << "2 - Agregar centro" << "\n"
          << "3 - Eliminar centro " << "\n"
-         << "4 - Ver todos los centros " << endl;
+         << "4 - Ver todos los centros " << "\n"
+         << "5- Volver al menu anterior " << endl;
+
     cout << "Ingrese una opcion: ";
     cin >> opcion;
     switch (opcion)
@@ -53,9 +59,17 @@ void Menu::mostrarMenuCentros()
     case 4:
         cout << "verTodosLosCentros()" << endl;
         break;
+    case 5:
+        cout << "Volviendo al menu anterior" << endl;
+        break;
     default:
         break;
     }
+}
+
+void Menu::cerrarMenu(){
+    delete proyectos;
+    exit(0);
 }
 
 void Menu::mostrarCentro(Centro c)
@@ -128,22 +142,44 @@ void Menu::mostrarMenuProyectos()
 {
     int opcion;
     cout << "Proyectos entre centros" << endl;
-    cout << "1 - Buscar colaboración mas económica" << "\n"
-         << "2 - Buscar colaboración mas rápida" << endl;
+    cout << "1 - Buscar colaboracion mas economica" << "\n"
+         << "2 - Buscar colaboracion mas rapida" << "\n"
+         << "3 - Volver al menu anterior" << endl;
     cout << "Ingrese una opcion: ";
     cin >> opcion;
     switch (opcion)
     {
     case 1:
-        cout << "buscarMasEconomico()" << endl;
+        buscarMasEconomico();
         break;
     case 2:
-        cout << "buscarMasRapido() " << endl;
+        buscarMasRapido();
+        break;
+    case 3:
+        cout << "Volviendo al menu anterior" << endl;
         break;
     default:
-        cout << "Opción incorrecta " << endl;
+        cout << "Opcion incorrecta " << endl;
         break;
     }
+}
+
+void Menu::buscarMasEconomico(){
+    string codigoOrigen, codigoDestino;
+    cout << "Ingrese el codigo de origen del centro: " << endl;
+    cin >> codigoOrigen;
+    cout << "Ingrese el codigo de destino del centro: " << endl;
+    cin >> codigoDestino;
+    proyectos->caminoMasCorto(codigoOrigen, codigoDestino, "costo");
+}
+
+void Menu::buscarMasRapido(){
+    string codigoOrigen, codigoDestino;
+    cout << "Ingrese el codigo de origen del centro: " << endl;
+    cin >> codigoOrigen;
+    cout << "Ingrese el codigo de destino del centro: " << endl;
+    cin >> codigoDestino;
+    proyectos->caminoMasCorto(codigoOrigen, codigoDestino, "tiempo");
 }
 
 void Menu::cargarProyectos()
@@ -218,7 +254,7 @@ void Menu::cargarProyectos()
     archivo.close();
 
     // Creamos el grafo con la cantidad de nodos y cargamos las aristas
-    grafo = new DigrafoPonderado(cantidadVertices);
+    proyectos = new DigrafoPonderado(cantidadVertices);
     string proyectoTexto2;
     ifstream archivo2("proyectos.txt");
     int verticesAgregados = 0;
@@ -234,19 +270,19 @@ void Menu::cargarProyectos()
             i++;
         }
 
-        if (grafo->sePuedeAgregarElCodigoVertice(datos[0]))
+        if (proyectos->sePuedeAgregarElCodigoVertice(datos[0]))
         {
-            grafo->asignarCodigoAVertice(verticesAgregados, datos[0]);
+            proyectos->asignarCodigoAVertice(verticesAgregados, datos[0]);
             verticesAgregados++;
         }
 
-        if (grafo->sePuedeAgregarElCodigoVertice(datos[1]))
+        if (proyectos->sePuedeAgregarElCodigoVertice(datos[1]))
         {
-            grafo->asignarCodigoAVertice(verticesAgregados, datos[1]);
+            proyectos->asignarCodigoAVertice(verticesAgregados, datos[1]);
             verticesAgregados++;
         }
 
-        //grafo->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
+        //proyectos->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
     }
-    grafo->mostrarListaAdyacencia();
+    proyectos->mostrarListaAdyacencia();
 }

@@ -8,7 +8,7 @@ DigrafoPonderado::DigrafoPonderado(int cantidadVertices)
     codigosVertices = new string[cantidadVertices];
     // Crear un arreglo de listas de adyacencia, inicialmente vacío
     listaAdyacencia = new Arista **[cantidadVertices]; // Crear un arreglo de punteros a listas de adyacencia
-    for (int i = 0; i < cantidadVertices; ++i)
+    for (int i = 0; i < cantidadVertices; i++)
     {
         listaAdyacencia[i] = nullptr; // Inicializamos cada lista de adyacencia como nullptr
     }
@@ -59,7 +59,7 @@ void DigrafoPonderado::agregarArista(const string &codigoOrigen, const string &c
     // Si no hay ninguna lista de adyacencia en el vértice origen, la creamos
     if (listaAdyacencia[vOrigen] == nullptr)
     {
-        listaAdyacencia[vOrigen] = new Arista *[1];
+        listaAdyacencia[vOrigen] = new Arista* [1];
         listaAdyacencia[vOrigen][0] = nuevaArista;
     }
     else
@@ -67,7 +67,7 @@ void DigrafoPonderado::agregarArista(const string &codigoOrigen, const string &c
         //redimensionamos el arreglo
         int tamanioActual = 0;
         while (listaAdyacencia[vOrigen][tamanioActual] != nullptr)
-            tamanioActual++;
+            tamanioActual+=1;
         // Crear un nuevo arreglo con una posición extra
         Arista **nuevaLista = new Arista *[tamanioActual + 1];
 
@@ -83,11 +83,12 @@ void DigrafoPonderado::agregarArista(const string &codigoOrigen, const string &c
         // Eliminar la lista vieja y actualizar la lista de adyacencia
         delete[] listaAdyacencia[vOrigen];
         listaAdyacencia[vOrigen] = nuevaLista;
+
     }
 }
 
 // Método para encontrar el camino más corto usando Dijkstra
-void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino)
+void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo)
 {
 
     int start = obtenerIndexDeCodigoVertice(codigoOrigen);
@@ -95,7 +96,7 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino)
 
     if (start == -1 || end == -1)
     {
-        cout << "Las claves de los vértices no son válidas." << endl;
+        cout << "Los codigos de los centros no son validos" << endl;
         return;
     }
 
@@ -135,8 +136,11 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino)
             for (int j = 0; listaAdyacencia[u][j] != nullptr; ++j)
             {
                 int vDestino = listaAdyacencia[u][j]->destino;
-                int peso = listaAdyacencia[u][j]->peso.costo;
-
+                int peso;
+                if(atributo == "costo")
+                    peso = listaAdyacencia[u][j]->peso.costo;
+                else if (atributo == "tiempo")
+                    peso = listaAdyacencia[u][j]->peso.tiempo;
                 // si encontramos una distancia más corta, la actualizamos
                 if (distancias[u] + peso < distancias[vDestino])
                 {
@@ -153,7 +157,7 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino)
     }
     else
     {
-        cout << "El costo mas corto de " << codigoOrigen << " a " << codigoDestino << " es: " << distancias[end] << endl;
+        cout << "La colaboración basada en " << atributo << " mas rapida es de " << codigoOrigen << " a " << codigoDestino << " es: " << distancias[end] << endl;
 
         cout << "El camino mas corto es: ";
         int temp = end;
@@ -181,10 +185,11 @@ void DigrafoPonderado::mostrarListaAdyacencia()
         if (listaAdyacencia[i] != nullptr)
         {
             for (int j = 0; listaAdyacencia[i][j]!= nullptr; j++)
-            {
+            {   /*
                 cout << codigosVertices[listaAdyacencia[i][j]->destino] << " (costo: " << listaAdyacencia[i][j]->peso.costo
-                     << ", tiempo: " << listaAdyacencia[i][j]->peso.tiempo << ") ";
+                     << ", tiempo: " << listaAdyacencia[i][j]->peso.tiempo << ") ";*/ cout <<listaAdyacencia[i][j]->peso.costo<< endl;
             }
+            
         }
         cout << endl;
     }
