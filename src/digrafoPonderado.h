@@ -11,8 +11,9 @@ struct Peso {
 };
 
 struct Arista {
-    int destino; //A donde apunta la arista
+    int destino; 
     Peso peso; 
+    Arista* siguiente;
 };
 
 class DigrafoPonderado
@@ -20,16 +21,20 @@ class DigrafoPonderado
 private:
     int cantidadVertices;      
     string* codigosVertices;    // codigos de los centros
-    Arista*** listaAdyacencia;
+    Arista** listaAdyacencia;
 public:
     DigrafoPonderado(int cantidadVertices);
-    void mostrarListaAdyacencia();
-    void asignarCodigoAVertice(int indexVertice, const string& codigo);
-    bool sePuedeAgregarElCodigoVertice(const string& codigoAAgregar);
-    string obtenerCodigoVertice(int indexVertice);
-    int obtenerIndexDeCodigoVertice(const string& codigoBuscado);
-    void agregarArista(const string& codigoOrigen, const string& codigoDestino, int costo, float tiempo);
+
+    //Manejo de codigos
+    void asignarCodigoAVertice(int indexVertice, string codigo);
+    bool sePuedeAgregarElCodigo(string codigoAAgregar);
+    string obtenerCodigoPorIndex(int indexVertice);
+    int obtenerIndexPorCodigo(string codigoBuscado);
+    void agregarArista(string codigoOrigen, string codigoDestino, int costo, float tiempo);
+
+    //Interfaces
     void caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo);
+    void mostrarListaAdyacencia();
     virtual ~DigrafoPonderado();
 };
 

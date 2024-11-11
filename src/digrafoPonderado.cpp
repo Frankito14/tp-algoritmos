@@ -1,210 +1,172 @@
 #include "digrafoPonderado.h"
 
-DigrafoPonderado::DigrafoPonderado(int cantidadVertices)
+DigrafoPonderado::DigrafoPonderado(int cantidadNodos)
 {
-    this->cantidadVertices = cantidadVertices;
-
-    // Inicializamos el arreglo de claves de los vértices
+    cantidadVertices = cantidadNodos;
     codigosVertices = new string[cantidadVertices];
-    // Crear un arreglo de listas de adyacencia, inicialmente vacío
-    listaAdyacencia = new Arista **[cantidadVertices]; // Crear un arreglo de punteros a listas de adyacencia
-    for (int i = 0; i < cantidadVertices; i++)
+    listaAdyacencia = new Arista *[cantidadVertices];
+
+    // Setear a null pointer
+    for (int i = 0; i < cantidadVertices; ++i)
     {
-        listaAdyacencia[i] = nullptr; // Inicializamos cada lista de adyacencia como nullptr
+        listaAdyacencia[i] = nullptr;
     }
 }
 
 // Método para asignar la clave a un vértice
-void DigrafoPonderado::asignarCodigoAVertice(int indexVertice, const string &codigo)
+void DigrafoPonderado::asignarCodigoAVertice(int indexVertice, string codigo)
 {
     codigosVertices[indexVertice] = codigo;
 }
 
-bool DigrafoPonderado::sePuedeAgregarElCodigoVertice(const string &codigoAAgregar)
+bool DigrafoPonderado::sePuedeAgregarElCodigo(string codigo)
 {
-    return (obtenerIndexDeCodigoVertice(codigoAAgregar) == -1);
+    return (obtenerIndexPorCodigo(codigo) == -1);
 }
 
 // Método para obtener la clave de un vértice
-string DigrafoPonderado::obtenerCodigoVertice(int indexVertice)
+string DigrafoPonderado::obtenerCodigoPorIndex(int indexVertice)
 {
     return codigosVertices[indexVertice];
 }
 
 // Método para obtener la clave de un vértice
-int DigrafoPonderado::obtenerIndexDeCodigoVertice(const string &codigoBuscado)
+int DigrafoPonderado::obtenerIndexPorCodigo(string codigoBuscado)
 {
     int index = -1;
     for (int i = 0; i < cantidadVertices; i++)
     {
         if (codigosVertices[i] == codigoBuscado)
-        {
             index = i;
-        }
     }
     return index;
 }
 
 // Método para agregar una arista (u, v) con peso (costo, tiempo)
-void DigrafoPonderado::agregarArista(const string &codigoOrigen, const string &codigoDestino, int costo, float tiempo)
+void DigrafoPonderado::agregarArista(string codigoOrigen, string codigoDestino, int costo, float tiempo)
 {
     // Crear una nueva arista
-    int vOrigen = obtenerIndexDeCodigoVertice(codigoOrigen);
-    int vDestino = obtenerIndexDeCodigoVertice(codigoDestino);
+    int indexOrigen = obtenerIndexPorCodigo(codigoOrigen);
+    int indexDestino = obtenerIndexPorCodigo(codigoDestino);
     Arista *nuevaArista = new Arista;
-    nuevaArista->destino = vDestino;
+    nuevaArista->destino = indexDestino;
     nuevaArista->peso.costo = costo;
     nuevaArista->peso.tiempo = tiempo;
-
-    // Si no hay ninguna lista de adyacencia en el vértice origen, la creamos
-    if (listaAdyacencia[vOrigen] == nullptr)
-    {
-        listaAdyacencia[vOrigen] = new Arista* [1];
-        listaAdyacencia[vOrigen][0] = nuevaArista;
-    }
-    else
-    {
-        //redimensionamos el arreglo
-        int tamanioActual = 0;
-        while (listaAdyacencia[vOrigen][tamanioActual] != nullptr)
-            tamanioActual+=1;
-        // Crear un nuevo arreglo con una posición extra
-        Arista **nuevaLista = new Arista *[tamanioActual + 1];
-
-        // Copiar las aristas existentes
-        for (int i = 0; i < tamanioActual; ++i)
-        {
-            nuevaLista[i] = listaAdyacencia[vOrigen][i];
-        }
-
-        // Agregar la nueva arista
-        nuevaLista[tamanioActual] = nuevaArista;
-
-        // Eliminar la lista vieja y actualizar la lista de adyacencia
-        delete[] listaAdyacencia[vOrigen];
-        listaAdyacencia[vOrigen] = nuevaLista;
-
-    }
+    nuevaArista->siguiente = listaAdyacencia[indexOrigen]; // Apuntamos a la arista anterior
+    listaAdyacencia[indexOrigen] = nuevaArista;            // Ahora la nueva arista es la primera en la lista
 }
 
 // Método para encontrar el camino más corto usando Dijkstra
 void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo)
 {
+    int indexOrigen = obtenerIndexPorCodigo(codigoOrigen);
+    int indexDestino = obtenerIndexPorCodigo(codigoDestino);
 
-    int start = obtenerIndexDeCodigoVertice(codigoOrigen);
-    int end = obtenerIndexDeCodigoVertice(codigoDestino);
+    // Inicializamos las distancias y el arreglo de predecesores
+    int *distancia = new int[cantidadVertices];
+    int *predecesor = new int[cantidadVertices];
+    bool *visitado = new bool[cantidadVertices];
 
-    if (start == -1 || end == -1)
-    {
-        cout << "Los codigos de los centros no son validos" << endl;
-        return;
-    }
-
-    // Inicializar arreglos auxiliares
-    const int INFINITO = 100000;
-    int *distancias = new int[cantidadVertices];
-    int *predecesores = new int[cantidadVertices];
-    bool *visitados = new bool[cantidadVertices];
-    for (int i = 0; i < cantidadVertices; i++)
-    {
-        distancias[i] = INFINITO;
-        predecesores[i] = -1;
-        visitados[i] = false;
-    }
-    // La distanicia de un vertice consigo mismo siempre es 0
-    distancias[start] = 0;
-
-    // Cola de prioridades (implementada manualmente como el índice de vértice y su distancia)
     for (int i = 0; i < cantidadVertices; ++i)
     {
+        distancia[i] = 1000000; // Usamos un valor alto como "infinito"
+        predecesor[i] = -1;
+        visitado[i] = false;
+    }
+    distancia[indexOrigen] = 0;
+
+    // Algoritmo de Dijkstra sin usar colas de prioridad
+    for (int i = 0; i < cantidadVertices - 1; ++i)
+    {
+        // Buscar el vértice con la distancia más pequeña
         int u = -1;
-        // Encontrar el vértice con la distancia más pequeña que aún no haya sido visitado
         for (int j = 0; j < cantidadVertices; ++j)
         {
-            if (!visitados[j] && (u == -1 || distancias[j] < distancias[u]))
+            if (!visitado[j] && (u == -1 || distancia[j] < distancia[u]))
             {
                 u = j;
             }
         }
 
-        // marcar el vértice como visitado
-        visitados[u] = true;
+        visitado[u] = true;
 
-        // actualizar las distancias de los vecinos
-        if (listaAdyacencia[u] != nullptr)
+        // Relajamos las aristas
+        Arista *arista = listaAdyacencia[u];
+        while (arista != nullptr)
         {
-            for (int j = 0; listaAdyacencia[u][j] != nullptr; ++j)
+            int v = arista->destino;
+            int peso;
+            if(atributo == "costo")
+                peso = arista->peso.costo;
+            else if(atributo == "tiempo")
+                peso = arista->peso.tiempo;
+            else
+                return;
+
+            if (distancia[u] + peso < distancia[v])
             {
-                int vDestino = listaAdyacencia[u][j]->destino;
-                int peso;
-                if(atributo == "costo")
-                    peso = listaAdyacencia[u][j]->peso.costo;
-                else if (atributo == "tiempo")
-                    peso = listaAdyacencia[u][j]->peso.tiempo;
-                // si encontramos una distancia más corta, la actualizamos
-                if (distancias[u] + peso < distancias[vDestino])
-                {
-                    distancias[vDestino] = distancias[u] + peso;
-                    predecesores[vDestino] = u;
-                }
+                distancia[v] = distancia[u] + peso;
+                predecesor[v] = u;
             }
+            arista = arista->siguiente;
         }
     }
 
-    if (distancias[end] == INFINITO)
+    // Si la distancia al vértice destino sigue siendo infinita, no hay camino
+    if (distancia[indexDestino] == 1000000)
     {
-        cout << "No hay camino desde " << codigoOrigen << " hasta " << codigoDestino << endl;
+        cout << "No hay camino desde " << codigosVertices[indexOrigen] << " hasta " << codigosVertices[indexDestino] << "." << endl;
     }
     else
     {
-        cout << "La colaboración basada en " << atributo << " mas rapida es de " << codigoOrigen << " a " << codigoDestino << " es: " << distancias[end] << endl;
+        // Imprimimos el costo del camino más corto
+        cout << "La colaboracion mas rapida basada en " << atributo << " es: "<< codigosVertices[indexOrigen] << " hasta " << codigosVertices[indexDestino] << " es: " << distancia[indexDestino] << endl;
 
-        cout << "El camino mas corto es: ";
-        int temp = end;
-        string path = codigoDestino;
-        while (predecesores[temp] != -1)
+        // Reconstruimos el camino
+        cout << "El camino es: ";
+        int v = indexDestino;
+        while (v != -1)
         {
-            path = codigosVertices[predecesores[temp]] + " -> " + path;
-            temp = predecesores[temp];
+            cout << codigosVertices[v] << " <- ";
+            v = predecesor[v];
         }
-        cout << path << endl;
+        cout << endl;
     }
 
-    delete[] distancias;
-    delete[] predecesores;
-    delete[] visitados;
+    // Limpiamos la memoria
+    delete[] distancia;
+    delete[] predecesor;
+    delete[] visitado;
 }
-
 
 void DigrafoPonderado::mostrarListaAdyacencia()
 {
-    cout << "Lista de adyacencia del grafo:" << endl;
-    for (int i = 0; i < cantidadVertices; i++)
+    cout << "Colaboraciones entre centros:" <<endl;
+    for (int i = 0; i < cantidadVertices; ++i)
     {
-        cout << codigosVertices[i] << " (" << i << "): "; // codigo (0)
-        if (listaAdyacencia[i] != nullptr)
+        cout << "Centro " << codigosVertices[i] << " (" << i << "): ";
+        Arista *arista = listaAdyacencia[i];
+        while (arista != nullptr)
         {
-            for (int j = 0; listaAdyacencia[i][j]!= nullptr; j++)
-            {   
-                cout << codigosVertices[listaAdyacencia[i][j]->destino] << " (costo: " << listaAdyacencia[i][j]->peso.costo
-                     << ", tiempo: " << listaAdyacencia[i][j]->peso.tiempo << ") ";
-            }
-            
+            cout << codigosVertices[arista->destino] << " (Costo: " << arista->peso.costo << ", Tiempo: " << arista->peso.tiempo << ") ";
+            arista = arista->siguiente;
         }
         cout << endl;
     }
 }
 
-
 DigrafoPonderado::~DigrafoPonderado()
 {
     for (int i = 0; i < cantidadVertices; ++i)
     {
-        if (listaAdyacencia[i] != nullptr)
+        Arista *arista = listaAdyacencia[i];
+        while (arista != nullptr)
         {
-            delete[] listaAdyacencia[i]; // lista de adyacencia de cada vértice
+            Arista *siguiente = arista->siguiente;
+            delete arista;
+            arista = siguiente;
         }
     }
-    delete[] listaAdyacencia; 
-    delete[] codigosVertices; 
+    delete[] listaAdyacencia;
+    delete[] codigosVertices;
 }

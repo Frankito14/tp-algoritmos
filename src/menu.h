@@ -30,6 +30,7 @@ private:
     void mostrarCentro(Centro c);
     //Funciones de proyectos
     void cargarProyectos();
+    void verColaboraciones();
     void buscarMasEconomico();
     void buscarMasRapido();
 

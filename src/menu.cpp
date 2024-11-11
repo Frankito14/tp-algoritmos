@@ -67,7 +67,8 @@ void Menu::mostrarMenuCentros()
     }
 }
 
-void Menu::cerrarMenu(){
+void Menu::cerrarMenu()
+{
     delete proyectos;
     exit(0);
 }
@@ -142,20 +143,24 @@ void Menu::mostrarMenuProyectos()
 {
     int opcion;
     cout << "Proyectos entre centros" << endl;
-    cout << "1 - Buscar colaboracion mas economica" << "\n"
-         << "2 - Buscar colaboracion mas rapida" << "\n"
-         << "3 - Volver al menu anterior" << endl;
+    cout << "1 - Ver todas las colaboraciones" << "\n"
+         << "2 - Buscar colaboracion mas economica" << "\n"
+         << "3 - Buscar colaboracion mas rapida" << "\n"
+         << "4 - Volver al menu anterior" << endl;
     cout << "Ingrese una opcion: ";
     cin >> opcion;
     switch (opcion)
     {
     case 1:
-        buscarMasEconomico();
+        verColaboraciones();
         break;
     case 2:
-        buscarMasRapido();
+        buscarMasEconomico();
         break;
     case 3:
+        buscarMasRapido();
+        break;
+    case 4:
         cout << "Volviendo al menu anterior" << endl;
         break;
     default:
@@ -164,7 +169,13 @@ void Menu::mostrarMenuProyectos()
     }
 }
 
-void Menu::buscarMasEconomico(){
+void Menu:: verColaboraciones()
+{
+    proyectos->mostrarListaAdyacencia();
+}
+
+void Menu::buscarMasEconomico()
+{
     string codigoOrigen, codigoDestino;
     cout << "Ingrese el codigo de origen del centro: " << endl;
     cin >> codigoOrigen;
@@ -173,7 +184,8 @@ void Menu::buscarMasEconomico(){
     proyectos->caminoMasCorto(codigoOrigen, codigoDestino, "costo");
 }
 
-void Menu::buscarMasRapido(){
+void Menu::buscarMasRapido()
+{
     string codigoOrigen, codigoDestino;
     cout << "Ingrese el codigo de origen del centro: " << endl;
     cin >> codigoOrigen;
@@ -216,7 +228,7 @@ void Menu::cargarProyectos()
                 destinoCargado = true;
         }
 
-        //Si algun codigo no esta cargado, redimension el arreglo y los carga
+        // Si algun codigo no esta cargado, redimension el arreglo y los carga
         if (!origenCargado || !destinoCargado)
         {
             // Crea un nuevo arreglo agregando los codigos que se usaran como vertices del grafo
@@ -270,13 +282,13 @@ void Menu::cargarProyectos()
             i++;
         }
 
-        if (proyectos->sePuedeAgregarElCodigoVertice(datos[0]))
+        if (proyectos->sePuedeAgregarElCodigo(datos[0]))
         {
             proyectos->asignarCodigoAVertice(verticesAgregados, datos[0]);
             verticesAgregados++;
         }
 
-        if (proyectos->sePuedeAgregarElCodigoVertice(datos[1]))
+        if (proyectos->sePuedeAgregarElCodigo(datos[1]))
         {
             proyectos->asignarCodigoAVertice(verticesAgregados, datos[1]);
             verticesAgregados++;
@@ -284,5 +296,4 @@ void Menu::cargarProyectos()
 
         proyectos->agregarArista(datos[0], datos[1], stoi(datos[2]), stof(datos[3])); // (origen, destino, costo, tiempo)
     }
-    proyectos->mostrarListaAdyacencia();
 }
