@@ -1,9 +1,0 @@
-AVANCES:
-+ Base de lo que serian los menus, faltarian agregar las opciones de agregar, eliminar, etc
-+ Carga y guardado de archivos, habria que adaptarlo cuando decidamos que estructura usar para guardar los centros y eso
-    - De momento lo hice con vectores para ver que funcione, pero hay que cambiarlo
-    - Lo ideal es ordenarlo en funciones, clases, etc, pero lo tire ahi en el main para ver si funcionaba
-    - Mi idea era que el menu tenga una "lista" de centros y proyectos como propiedades, asi es mas facil hacer las consultas
-    - Hay una implementacion de Lista, pero solo sirve para enteros, habria que cambiar el typedef por el de centros
-
-    

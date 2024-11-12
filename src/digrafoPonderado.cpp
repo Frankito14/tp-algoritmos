@@ -13,7 +13,7 @@ DigrafoPonderado::DigrafoPonderado(int cantidadNodos)
     }
 }
 
-// Método para asignar la clave a un vértice
+
 void DigrafoPonderado::asignarCodigoAVertice(int indexVertice, string codigo)
 {
     codigosVertices[indexVertice] = codigo;
@@ -24,13 +24,13 @@ bool DigrafoPonderado::sePuedeAgregarElCodigo(string codigo)
     return (obtenerIndexPorCodigo(codigo) == -1);
 }
 
-// Método para obtener la clave de un vértice
+
 string DigrafoPonderado::obtenerCodigoPorIndex(int indexVertice)
 {
     return codigosVertices[indexVertice];
 }
 
-// Método para obtener la clave de un vértice
+
 int DigrafoPonderado::obtenerIndexPorCodigo(string codigoBuscado)
 {
     int index = -1;
@@ -55,7 +55,7 @@ void DigrafoPonderado::agregarArista(string codigoOrigen, string codigoDestino, 
     listaAdyacencia[indexOrigen] = nuevaArista;            // Pasa a ser la primera en la lista, pero el orden no es relevante
 }
 
-// Método para encontrar el camino más corto usando Dijkstra
+// Dijkstra
 void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo)
 {
     // Indices de los codigos
@@ -114,24 +114,23 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino,
         }
     }
 
-    // Si la distancia al vértice destino sigue siendo infinita, no hay camino
+    // Si la distancia al index destino es infinita, no hay camino
     if (distancia[indexDestino] == INFINITO)
     {
         cout << "No hay camino desde " << codigosVertices[indexOrigen] << " hasta " << codigosVertices[indexDestino] << "." << endl;
     }
     else
     {
-        // Imprimimos el costo del camino más corto
         cout << "La colaboracion mas rapida basada en " << atributo << " de " << codigosVertices[indexOrigen] << " a " << codigosVertices[indexDestino] << " es: " << distancia[indexDestino] << endl;
 
-        // Reconstruimos el camino
+        // Mostrar camino
         cout << "El camino es: ";
         int v = indexDestino;
         while (v != indexOrigen)
         {
             cout << codigosVertices[v] << " <- ";
             int pred = predecesor[v];
-            // Buscar la arista entre v y pred para mostrar su costo y tiempo
+            // Buscar la arista entre v y pred para mostrar su costo / tiempo
             Arista *arista = listaAdyacencia[pred];
             while (arista != nullptr)
             {
@@ -150,7 +149,7 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino,
         cout << codigosVertices[v] << endl;
     }
 
-    // Limpiamos la memoria
+    // Liberar especio
     delete[] distancia;
     delete[] predecesor;
     delete[] visitado;

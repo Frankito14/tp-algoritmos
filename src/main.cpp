@@ -4,6 +4,7 @@
 #include "menu.cpp"
 #include "centro.h"
 #include "../src/estructuras/tabla-hash.h"
+//#include "../src/estructuras/tabla-hash.cpp" //Si no funciona, descomentar esto
 #include <string>
 #include <sstream>
 #include <fstream>
