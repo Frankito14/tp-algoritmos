@@ -4,6 +4,7 @@
 
 Menu::Menu()
 {
+    //cargarCentros();
     cargarProyectos();
 }
 
@@ -204,7 +205,6 @@ void Menu::cargarProyectos()
     // Obtenemos la cantidad de vertices que tendra el grafo. Tenemos que contar los codigos (Sin contar los repetidos)
     while (getline(archivo, proyectoTexto))
     {
-
         stringstream codigo;
         codigo << proyectoTexto[0] << proyectoTexto[1] << proyectoTexto[2];
         string codigoOrigen = codigo.str();
@@ -264,7 +264,6 @@ void Menu::cargarProyectos()
         }
     }
     archivo.close();
-
     // Creamos el grafo con la cantidad de nodos y cargamos las aristas
     proyectos = new DigrafoPonderado(cantidadVertices);
     string proyectoTexto2;

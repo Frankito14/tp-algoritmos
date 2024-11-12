@@ -42,10 +42,9 @@ int DigrafoPonderado::obtenerIndexPorCodigo(string codigoBuscado)
     return index;
 }
 
-// Método para agregar una arista (u, v) con peso (costo, tiempo)
 void DigrafoPonderado::agregarArista(string codigoOrigen, string codigoDestino, int costo, float tiempo)
 {
-    // Crear una nueva arista
+
     int indexOrigen = obtenerIndexPorCodigo(codigoOrigen);
     int indexDestino = obtenerIndexPorCodigo(codigoDestino);
     Arista *nuevaArista = new Arista;
@@ -53,84 +52,102 @@ void DigrafoPonderado::agregarArista(string codigoOrigen, string codigoDestino, 
     nuevaArista->peso.costo = costo;
     nuevaArista->peso.tiempo = tiempo;
     nuevaArista->siguiente = listaAdyacencia[indexOrigen]; // Apuntamos a la arista anterior
-    listaAdyacencia[indexOrigen] = nuevaArista;            // Ahora la nueva arista es la primera en la lista
+    listaAdyacencia[indexOrigen] = nuevaArista;            // Pasa a ser la primera en la lista, pero el orden no es relevante
 }
 
 // Método para encontrar el camino más corto usando Dijkstra
 void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino, string atributo)
 {
+    // Indices de los codigos
     int indexOrigen = obtenerIndexPorCodigo(codigoOrigen);
     int indexDestino = obtenerIndexPorCodigo(codigoDestino);
 
-    // Inicializamos las distancias y el arreglo de predecesores
+    const int INFINITO = 1000000;
+
     int *distancia = new int[cantidadVertices];
     int *predecesor = new int[cantidadVertices];
     bool *visitado = new bool[cantidadVertices];
 
     for (int i = 0; i < cantidadVertices; ++i)
     {
-        distancia[i] = 1000000; // Usamos un valor alto como "infinito"
-        predecesor[i] = -1;
-        visitado[i] = false;
+        distancia[i] = INFINITO; // Distancias entre los nodos
+        predecesor[i] = -1;      // Index de los predecesores
+        visitado[i] = false;     // Si el nodo ya se proceso
     }
     distancia[indexOrigen] = 0;
 
-    // Algoritmo de Dijkstra sin usar colas de prioridad
-    for (int i = 0; i < cantidadVertices - 1; ++i)
+    // Dijkstra
+    // Procesa cada vertice
+    for (int i = 0; i < (cantidadVertices - 1); i++)
     {
-        // Buscar el vértice con la distancia más pequeña
-        int u = -1;
-        for (int j = 0; j < cantidadVertices; ++j)
+        // Buscar el vértice con la menor distancia
+        int indexVertice = -1; // No hay nodo seleccionado
+        for (int j = 0; j < cantidadVertices; j++)
         {
-            if (!visitado[j] && (u == -1 || distancia[j] < distancia[u]))
+            if (!visitado[j] && (indexVertice == -1 || distancia[j] < distancia[indexVertice]))
             {
-                u = j;
+                indexVertice = j; // Selecciona el nodo con la distancia mas corta o setea el primero
             }
         }
 
-        visitado[u] = true;
+        visitado[indexVertice] = true;
 
-        // Relajamos las aristas
-        Arista *arista = listaAdyacencia[u];
+        // "Relajar" (Encontrar la distancia de los adyacentes del nodo actual)
+        Arista *arista = listaAdyacencia[indexVertice];
         while (arista != nullptr)
         {
             int v = arista->destino;
             int peso;
-            if(atributo == "costo")
+            if (atributo == "costo")
                 peso = arista->peso.costo;
-            else if(atributo == "tiempo")
+            else if (atributo == "tiempo")
                 peso = arista->peso.tiempo;
             else
                 return;
 
-            if (distancia[u] + peso < distancia[v])
+            if (distancia[indexVertice] + peso < distancia[v])
             {
-                distancia[v] = distancia[u] + peso;
-                predecesor[v] = u;
+                distancia[v] = distancia[indexVertice] + peso;
+                predecesor[v] = indexVertice;
             }
             arista = arista->siguiente;
         }
     }
 
     // Si la distancia al vértice destino sigue siendo infinita, no hay camino
-    if (distancia[indexDestino] == 1000000)
+    if (distancia[indexDestino] == INFINITO)
     {
         cout << "No hay camino desde " << codigosVertices[indexOrigen] << " hasta " << codigosVertices[indexDestino] << "." << endl;
     }
     else
     {
         // Imprimimos el costo del camino más corto
-        cout << "La colaboracion mas rapida basada en " << atributo << " es: "<< codigosVertices[indexOrigen] << " hasta " << codigosVertices[indexDestino] << " es: " << distancia[indexDestino] << endl;
+        cout << "La colaboracion mas rapida basada en " << atributo << " de " << codigosVertices[indexOrigen] << " a " << codigosVertices[indexDestino] << " es: " << distancia[indexDestino] << endl;
 
         // Reconstruimos el camino
         cout << "El camino es: ";
         int v = indexDestino;
-        while (v != -1)
+        while (v != indexOrigen)
         {
             cout << codigosVertices[v] << " <- ";
-            v = predecesor[v];
+            int pred = predecesor[v];
+            // Buscar la arista entre v y pred para mostrar su costo y tiempo
+            Arista *arista = listaAdyacencia[pred];
+            while (arista != nullptr)
+            {
+                if (arista->destino == v)
+                {
+                    if(atributo == "costo")
+                        cout << "(Costo: " << arista->peso.costo << ") <- ";
+                    else if (atributo == "tiempo")
+                        cout << "(Tiempo: " << arista->peso.tiempo << ") <- ";
+                    break;
+                }
+                arista = arista->siguiente;
+            }
+            v = pred;
         }
-        cout << endl;
+        cout << codigosVertices[v] << endl;
     }
 
     // Limpiamos la memoria
@@ -141,7 +158,7 @@ void DigrafoPonderado::caminoMasCorto(string codigoOrigen, string codigoDestino,
 
 void DigrafoPonderado::mostrarListaAdyacencia()
 {
-    cout << "Colaboraciones entre centros:" <<endl;
+    cout << "Colaboraciones entre centros:" << endl;
     for (int i = 0; i < cantidadVertices; ++i)
     {
         cout << "Centro " << codigosVertices[i] << " (" << i << "): ";
@@ -157,7 +174,7 @@ void DigrafoPonderado::mostrarListaAdyacencia()
 
 DigrafoPonderado::~DigrafoPonderado()
 {
-    for (int i = 0; i < cantidadVertices; ++i)
+    for (int i = 0; i < cantidadVertices; i++)
     {
         Arista *arista = listaAdyacencia[i];
         while (arista != nullptr)
