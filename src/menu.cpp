@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "centro.h"
+#include "../src/estructuras/tabla-hash.h"
 #include <string>
 
 Menu::Menu()
