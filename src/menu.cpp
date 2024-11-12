@@ -3,9 +3,8 @@
 #include "../src/estructuras/tabla-hash.h"
 #include <string>
 
-Menu::Menu()
+Menu::Menu(TablaHash* tabla) : centros(tabla)
 {
-    cargarCentros();
     cargarProyectos();
 }
 
@@ -59,7 +58,7 @@ void Menu::mostrarMenuCentros()
         eliminarCentro();
         break;
     case 4:
-        cout << "verTodosLosCentros()" << endl;
+        verTodosLosCentros();
         break;
     case 5:
         cout << "Volviendo al menu anterior" << endl;
@@ -143,6 +142,7 @@ void Menu::eliminarCentro()
     cout << "Ingrese el codigo del centro a eliminar: ";
     cin >> opcion;
     Centro* centro_a_eliminar = centros->buscar(opcion);
+    cout << centro_a_eliminar->codigo << endl;
     centros->eliminar(centro_a_eliminar);
     cout << "Centro eliminado correctamente" << endl;;
 }

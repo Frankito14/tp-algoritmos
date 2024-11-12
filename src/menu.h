@@ -2,7 +2,7 @@
 #define MENU_H_INCLUDED
 #include "centro.h"
 #include "digrafoPonderado.cpp"
-#include "./estructuras/tabla-hash.cpp"
+#include "./estructuras/tabla-hash.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,7 +14,7 @@ private:
     DigrafoPonderado* proyectos;
     TablaHash* centros;   
 public:
-    Menu();
+    Menu(TablaHash* tabla);
     void mostrarMenuPrincipal();
     void mostrarMenuCentros();
     void mostrarMenuProyectos();
@@ -37,4 +37,4 @@ private:
     void buscarMasRapido();
 };
 
-#endif 
+#endif
