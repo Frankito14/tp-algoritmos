@@ -47,8 +47,6 @@ void cargarCentros(TablaHash* tabla){
         }
     }
     archivo.close();
-    //inicio guardarCentros()
-    tabla->mostrar_todos();
 }
 
 
