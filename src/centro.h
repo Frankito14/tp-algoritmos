@@ -14,4 +14,19 @@ typedef struct
         int cant_p_internacionales;
     } Centro;
 
-#endif //CENTRO_H
+struct CentroEliminado : public Centro {
+    static CentroEliminado* instance;
+
+    private:
+        CentroEliminado() = default;
+
+    public:
+        static CentroEliminado* getInstance() {
+            if(instance == nullptr){
+                instance = new CentroEliminado();
+            }
+            return instance;
+        };
+};
+
+#endif //MENU_H

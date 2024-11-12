@@ -2,6 +2,7 @@
 #define MENU_H_INCLUDED
 #include "centro.h"
 #include "digrafoPonderado.cpp"
+#include "./estructuras/tabla-hash.cpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -10,9 +11,8 @@ using namespace std;
 class Menu
 {
 private:
-    //Centro* centros = new Centro[0];
     DigrafoPonderado* proyectos;
-    
+    TablaHash* centros;   
 public:
     Menu();
     void mostrarMenuPrincipal();
@@ -28,13 +28,13 @@ private:
     void eliminarCentro();
     void verTodosLosCentros();
     void mostrarCentro(Centro c);
+    template <typename T>
+    void imprimirOrdenados(function<T(Centro*)> funcion);
     //Funciones de proyectos
     void cargarProyectos();
     void verColaboraciones();
     void buscarMasEconomico();
     void buscarMasRapido();
-
-
 };
 
 #endif 
