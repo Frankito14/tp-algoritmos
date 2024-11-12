@@ -1,8 +1,9 @@
 #include "menu.h"
 #include "centro.h"
+#include "../src/estructuras/tabla-hash.h"
 #include <string>
 
-Menu::Menu() {}
+Menu::Menu(TablaHash* tabla) : _tabla(tabla){}
 
 void Menu::mostrarMenuPrincipal()
 {
@@ -48,76 +49,132 @@ void Menu::mostrarMenuCentros()
         eliminarCentro();
         break;
     case 4:
-        cout << "verTodosLosCentros()" <<endl;
+        verTodosLosCentros();
         break;
     default:
         break;
     }
 }
 
-void Menu::mostrarCentro(Centro c)
-{
-    cout << c.codigo << " - "
-         << c.nombre << " - "
-         << c.pais << " - "
-         << c.superficie << " - "
-         << c.cant_laboratorios << " - "
-         << c.cant_p_nacionales << " - "
-         << c.cant_p_internacionales << endl;
-}
-
 void Menu::consultarCentro()
 {
-    int opcion;
+    string opcion;
     cout << "Consultar centro" << endl;
     cout << "Ingrese el codigo del centro a buscar: ";
     cin >> opcion;
-    // Buscar centro
-    cout << "<Datos del centro>" << endl;
+    Centro* centro_buscado = _tabla->buscar(opcion);
+    if(centro_buscado == nullptr) {
+        cout << "El centro no esta guardado.";
+    } else {
+        _tabla->mostrar(centro_buscado);
+    }
+    delete centro_buscado;
+    cout << endl;
 }
 
 void Menu::eliminarCentro()
 {
-    int opcion;
+    string opcion;
     cout << "Eliminar centro" << endl;
     cout << "Ingrese el codigo del centro a eliminar: ";
     cin >> opcion;
-    // Buscar centro
-    // Borrar centro
+    Centro* centro_a_eliminar = _tabla->buscar(opcion);
+    _tabla->eliminar(centro_a_eliminar);
     cout << "Centro eliminado correctamente" << endl;
 }
 
 void Menu::agregarCentro()
 {
-    Centro nuevoCentro;
-    string opcionString;
+    Centro* nuevoCentro = new Centro();
+    string opcionCodigo, opcionNombre, opcionPais;
     float opcionFloat;
     int opcionInt;
     cout << "Agregar centro" << endl;
     cout << "Ingrese el codigo del nuevo centro: " << endl;
-    cin >> opcionString;
-    nuevoCentro.codigo = opcionString;
+    cin >> opcionCodigo;
+    cin.ignore();
+    nuevoCentro->codigo = opcionCodigo;
     cout << "Ingrese el nombre del nuevo centro (4 palabras): " << endl;
-    cin >> opcionString;
-    nuevoCentro.nombre = opcionString;
+    getline(cin, opcionNombre);
+    nuevoCentro->nombre = opcionNombre;
     cout << "Ingrese el país del nuevo centro: " << endl;
-    cin >> opcionString;
-    nuevoCentro.pais = opcionString;
+    cin >> opcionPais;
+    nuevoCentro->pais = opcionPais;
     cout << "Ingrese la superficie del nuevo centro: " << endl;
     cin >> opcionFloat;
-    nuevoCentro.superficie = opcionFloat;
+    nuevoCentro->superficie = opcionFloat;
     cout << "Ingrese la cantidad de laboratorios del nuevo centro: " << endl;
     cin >> opcionInt;
-    nuevoCentro.cant_laboratorios = opcionInt;
+    nuevoCentro->cant_laboratorios = opcionInt;
     cout << "Ingrese la cantidad de proyectos nacionales del nuevo centro: " << endl;
     cin >> opcionInt;
-    nuevoCentro.cant_p_nacionales = opcionInt;
+    nuevoCentro->cant_p_nacionales = opcionInt;
     cout << "Ingrese la cantidad de proyectos internacionales del nuevo centro: " << endl;
     cin >> opcionInt;
-    nuevoCentro.cant_p_internacionales = opcionInt;
-    // Guardar centro
-    mostrarCentro(nuevoCentro);
-    cout << "Centro agregado correctamente" << endl;
+    nuevoCentro->cant_p_internacionales = opcionInt;
+
+    _tabla->agregar(nuevoCentro);
+    _tabla->mostrar(_tabla->buscar(nuevoCentro->codigo));
+
+    cout << "\n" << "Centro agregado correctamente" << endl;
+}
+
+void Menu::verTodosLosCentros()
+{
+    _tabla->mostrar_todos();
+
+    int opcion;
+    cout << "Ordenar por: " << endl;
+    cout << "1 - Código" << "\n"
+         << "2 - Nombre" << "\n"
+         << "3 - Pais" << "\n"
+         << "4 - Superficie" << "\n"
+         << "5 - Cantidad de laboratorios" << "\n"
+         << "6 - Cantidad de proyectos nacionales" << "\n"
+         << "7 - Cantidad de proyectos internacionales" << "\n"
+         << "Otro: salir" << endl;
+    cout << "Ingrese una opcion: ";
+    cin >> opcion;
+    switch (opcion)
+    {
+    case 1:
+        _tabla->mostrar_lista_ordenada<string>([](Centro* c) {
+            return c->codigo;
+        });
+        break;
+    case 2:
+        _tabla->mostrar_lista_ordenada<string>([](Centro* c) -> string {
+            return c->nombre;
+        });
+        break;
+    case 3:
+        _tabla->mostrar_lista_ordenada<string>([](Centro* c) -> string {
+            return c->pais;
+        });
+        break;
+    case 4:
+        _tabla->mostrar_lista_ordenada<float>([](Centro* c) -> float {
+            return c->superficie;
+        });
+        break;
+    case 5:
+        _tabla->mostrar_lista_ordenada<int>([](Centro* c) -> int {
+            return c->cant_laboratorios;
+        });
+        break;
+    case 6:
+        _tabla->mostrar_lista_ordenada<int>([](Centro* c) -> int {
+            return c->cant_p_nacionales;
+        });
+        break;
+    case 7:
+        _tabla->mostrar_lista_ordenada<int>([](Centro* c) -> int {
+            return c->cant_p_internacionales;
+        });
+        break;
+    default:
+        break;
+    }
 }
 
 // Proyecto

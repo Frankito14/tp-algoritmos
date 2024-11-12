@@ -1,7 +1,7 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef CENTRO_H
+#define CENTRO_H
 using namespace std;
-// #include <string>
+#include <string>
 
 typedef struct
     {
@@ -18,13 +18,14 @@ struct CentroEliminado : public Centro {
     static CentroEliminado* instance;
 
     private:
-        CentroEliminado();
+        CentroEliminado() = default;
 
     public:
-        static CentroEliminado getInstance() {
-            if(instance != nullptr){
+        static CentroEliminado* getInstance() {
+            if(instance == nullptr){
                 instance = new CentroEliminado();
             }
+            return instance;
         };
 };
 
