@@ -16,6 +16,7 @@ class TablaHash
 
     public:
         TablaHash();
+        ~TablaHash();
         void agregar(Centro* c);
         void eliminar(Centro* c);
         Centro* buscar(string codigo);

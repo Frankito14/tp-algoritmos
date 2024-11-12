@@ -6,6 +6,20 @@ TablaHash::TablaHash() : cant_elem(0), size(1)
     this->array_null(tabla, 1);
 }
 
+TablaHash::~TablaHash() {
+    // Liberar los elementos del array si no son nullptr ni CentroEliminado
+    for (int i = 0; i < size; i++) {
+        if (tabla[i] != nullptr && tabla[i] != CentroEliminado::getInstance()) {
+            delete tabla[i];  // Liberar el objeto Centro
+        }
+    }
+
+    // Liberar el array de punteros
+    delete[] tabla;
+
+    cout << "Destructor de TablaHash llamado. Memoria liberada." << endl;
+}
+
 // Agrega un elemento a la tabla.
 void TablaHash::agregar(Centro* c) {
     this->cant_elem += 1;

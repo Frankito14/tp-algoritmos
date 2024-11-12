@@ -71,7 +71,7 @@ void Menu::mostrarMenuCentros()
 void Menu::cerrarMenu()
 {
     delete proyectos;
-    delete[] centros;
+    delete centros;
     exit(0);
 }
 
@@ -131,7 +131,7 @@ void Menu::consultarCentro()
     } else {
         centros->mostrar(centro_buscado);
     }
-    delete centro_buscado;
+    
     cout << endl;
 }
 
